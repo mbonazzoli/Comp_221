@@ -10,18 +10,25 @@ from sys import getsizeof
 
 
 
-def run(audio_data):
+def transform_data(path):
+    data = read_wave(path)
+    audio_chunk = split_audio(data)
+
+
+
+    print len(audio_chunk)
+
+
+def read_wave(audio_data):
     # Read wav file from input
     wav_file = wave.open(audio_data, 'r')
     data_size = wav_file.getnframes()
-    frate = wav_file.getframerate()
+    # frate = wav_file.getframerate()
     data = wav_file.readframes(data_size)
     wav_file.close()
     data1 = struct.unpack('{n}h'.format(n=data_size), data)
     data = np.array(data1)
-
-    audio_chunk = split_audio(data)
-    print len(audio_chunk)
+    return data
 
 
 def split_audio(byte_array):
@@ -56,7 +63,7 @@ def convert_frequency_domain(audio_data):
     return 'none'
 
 file_name = 'demo.wav'
-run(file_name)
+transform_data(file_name)
 # print(convert_frequency_domain(file_name))
 
 
