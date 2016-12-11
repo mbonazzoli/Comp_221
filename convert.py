@@ -5,14 +5,64 @@ import wave
 import numpy as np
 import struct
 from sys import getsizeof
+import math
 
+# key frequency values for the spoken word
+# RANGE_LIST = [40, 80, 120, 180, 300]
+# CHUNK_SIZE = 4096
+
+RANGE_LIST = [300]
+CHUNK_SIZE = 512
 
 '''Main'''
-def transform_data(path):
+def process_audio(path):
     data = read_wave(path)
     audio_chunks = split_audio(data)
-    output = convert_frequency_domain(audio_chunks)
-    return output
+    fft = convert_frequency_domain(audio_chunks)
+    keypoints = key_points(fft)
+
+    return keypoints
+
+
+
+def key_points(fft):
+    keypoints = []
+    for n in range(len(fft)):
+        nList = []
+        for m in range(len(RANGE_LIST)):
+            nList.append(0)
+        keypoints.append(nList)
+
+    for i in range(len(fft)):
+        highscores = [0, 0, 0, 0, 0]
+        for j in range(30, 300):
+            freq1 = np.real(fft[i][j])
+            freq2 = np.imag(fft[i][j])
+
+            re = freq1
+            im = freq2
+            mag = math.log(math.sqrt(re*re + im*im)+1)
+
+            index = get_index(j)
+
+            if mag> highscores[index]:
+                highscores[index] = mag
+                keypoints[i][index] = j
+
+    return keypoints
+
+
+def get_index(num):
+    i = 0
+    while RANGE_LIST[i]<num:
+        i+=1
+    return i
+
+def return_values(fft_nums):
+    strings_list = fft_nums.split(" ")
+    return strings_list[0], strings_list[1]
+
+
 
 
 def read_wave(audio_data):
@@ -28,15 +78,29 @@ def read_wave(audio_data):
 
 
 def split_audio(byte_array):
-    split_factor = 2048  # split factor must be power of two
-    array_size = getsizeof(byte_array)
-    chunk_size = array_size/split_factor
-    chunks = []
+    # split_factor = 4096  # split factor must be power of two
+    # array_size = getsizeof(byte_array)
+    # chunk_size = array_size/split_factor
+    # chunks = []
 
-    for i in range(split_factor):
-        start = i*chunk_size
-        end = (i+1)*chunk_size
-        chunks.append(byte_array[start:end])
+    # for i in range(split_factor):
+    #     start = i*chunk_size
+    #     end = (i+1)*chunk_size
+    #     chunks.append(byte_array[start:end])
+    # return chunks
+
+    total_size = len(byte_array)
+    chunk_size = CHUNK_SIZE
+    sampled_chunk_size = total_size / chunk_size
+
+    chunks = [[] for i in range(sampled_chunk_size)]
+
+    for j in range(sampled_chunk_size):
+        small_chunk = [0 for i in range(chunk_size*2)]
+        for i in range(chunk_size):
+            small_chunk[2*i] = byte_array[(j*chunk_size)+i]
+            small_chunk[2*i+1] = 0.0
+        chunks.append(small_chunk)
 
     return chunks
 
@@ -49,15 +113,17 @@ def convert_frequency_domain(chunk_array):
 
         if len(chunk) > 0:
             w = np.fft.fft(chunk)
-            freqs = np.fft.fftfreq(len(w))
-            results.append(freqs)
+            # freqs = np.fft.fftfreq(len(w))
+            results.append(w)
 
     return results
 
 
+
+
 file_name = 'demo.wav'
 
-print(transform_data(file_name))
+print(process_audio(file_name))
 
 
 
