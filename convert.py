@@ -7,23 +7,19 @@ import struct
 from sys import getsizeof
 
 
-
-
-
+'''Main'''
 def transform_data(path):
     data = read_wave(path)
-    audio_chunk = split_audio(data)
-
-
-
-    print len(audio_chunk)
+    audio_chunks = split_audio(data)
+    output = convert_frequency_domain(audio_chunks)
+    return output
 
 
 def read_wave(audio_data):
     # Read wav file from input
     wav_file = wave.open(audio_data, 'r')
     data_size = wav_file.getnframes()
-    # frate = wav_file.getframerate()
+
     data = wav_file.readframes(data_size)
     wav_file.close()
     data1 = struct.unpack('{n}h'.format(n=data_size), data)
@@ -32,7 +28,7 @@ def read_wave(audio_data):
 
 
 def split_audio(byte_array):
-    split_factor = 4
+    split_factor = 2048  # split factor must be power of two
     array_size = getsizeof(byte_array)
     chunk_size = array_size/split_factor
     chunks = []
@@ -45,32 +41,36 @@ def split_audio(byte_array):
     return chunks
 
 
-def convert_frequency_domain(audio_data):
+def convert_frequency_domain(chunk_array):
+    results = []
 
-    w = np.fft.fft(audio_data)
-    print(w[0])
-    freqs = np.fft.fftfreq(len(w))
+    for i in range(len(chunk_array)):
+        chunk = chunk_array[i]
 
-    # print(freqs.min(), freqs.max())
-    # (-0.5, 0.499975)
+        if len(chunk) > 0:
+            w = np.fft.fft(chunk)
+            freqs = np.fft.fftfreq(len(w))
+            results.append(freqs)
 
-    # Find the peak in the coefficients
-    idx = np.argmax(np.abs(w))
-    freq = freqs[idx]
+    return results
 
-    # freq_in_hertz = abs(freq * frate)
-    # print(freq_in_hertz)
-    return 'none'
 
 file_name = 'demo.wav'
-transform_data(file_name)
+
+print(transform_data(file_name))
+
+
+
+
 # print(convert_frequency_domain(file_name))
 
+# freq_in_hertz = abs(freq * frate)
+# print(freq_in_hertz)
 
+# print(freqs.min(), freqs.max())
+# (-0.5, 0.499975)
 
-
-
-
+# Find the peak in the coefficients
 
 # wave_reader = wave.open('demo.wav', 'r')
 #
