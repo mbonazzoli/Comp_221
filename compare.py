@@ -6,8 +6,7 @@ import record_data
 keypointSimilarity = .90
 
 def longestCommonSubstring(password, attempt):
-    #print(password[-1][0], attempt[-1][0])
-
+    # print(password[-1][0], attempt[-1][0])
 
     if len(password)==0 or len(attempt) == 0:
         return 0
@@ -17,7 +16,7 @@ def longestCommonSubstring(password, attempt):
         return max(longestCommonSubstring(password[:-1],attempt), longestCommonSubstring(password,attempt[:-1]))
 
 
-def lcsMatrix(password,attempt):
+def lcsMatrix(password, attempt):
     matrix = []
     for g in range(len(password)+1):
         horlist = []
@@ -28,9 +27,9 @@ def lcsMatrix(password,attempt):
     for i in range(len(password)):
         for j in range(len(attempt)):
             if closeEnough(password[i][0], attempt[j][0]):
-                matrix[i+1][j+1] = 1+ matrix[i][j]
+                matrix[i+1][j+1] = 1+matrix[i][j]
             else:
-                matrix[i + 1][j + 1] = max(matrix[i+1][j],matrix[i][j+1])
+                matrix[i + 1][j + 1] = max(matrix[i+1][j], matrix[i][j+1])
     return matrix[-1][-1]
 
 
@@ -63,10 +62,10 @@ def closeEnough(A,B):
 
 
 password = (stripOutZeros(convert.process_audio("Test_Files\Password1_hello.wav")))
-attempt1 = (stripOutZeros(convert.process_audio("C:\Users\Brett Graham\PycharmProjects\Comp_221\Test_Files\Attempt1_hello_hell.wav")))
-attempt2 = (stripOutZeros(convert.process_audio("C:\Users\Brett Graham\PycharmProjects\Comp_221\Test_Files\Attempt2_hello_howdy.wav")))
-attempt3 = stripOutZeros(convert.process_audio("C:\Users\Brett Graham\PycharmProjects\Comp_221\Test_Files\Attempt3_hello_hello.wav"))
-attempt4 = stripOutZeros(convert.process_audio("C:\Users\Brett Graham\PycharmProjects\Comp_221\Test_Files\Attempt4_hello_hello.wav"))
+attempt1 = (stripOutZeros(convert.process_audio("Test_Files\Attempt1_hello_hell.wav")))
+attempt2 = (stripOutZeros(convert.process_audio("Test_Files\Attempt2_hello_howdy.wav")))
+attempt3 = stripOutZeros(convert.process_audio("Test_Files\Attempt3_hello_hello.wav"))
+attempt4 = stripOutZeros(convert.process_audio("Test_Files\Attempt4_hello_hello.wav"))
 
 print(password)
 print(attempt1)
