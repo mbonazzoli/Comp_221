@@ -1,9 +1,9 @@
-import main_app
+#import main_app
 import convert
 import record_data
 
 
-
+keypointSimilarity = .90
 
 def longestCommonSubstring(password, attempt):
     #print(password[-1][0], attempt[-1][0])
@@ -27,7 +27,7 @@ def lcsMatrix(password,attempt):
 
     for i in range(len(password)):
         for j in range(len(attempt)):
-            if password[i][0] == attempt[j][0]:
+            if closeEnough(password[i][0], attempt[j][0]):
                 matrix[i+1][j+1] = 1+ matrix[i][j]
             else:
                 matrix[i + 1][j + 1] = max(matrix[i+1][j],matrix[i][j+1])
@@ -50,7 +50,18 @@ def stripOutZeros(array):
 
     return array[i:len(array)-g]
 
-#
+def closeEnough(A,B):
+    C = min(A,B)
+    lowerBound = C*keypointSimilarity
+    upperBound = C*(2-keypointSimilarity)
+    if A>lowerBound and A<upperBound:
+        if B>lowerBound and B<upperBound:
+            return True
+    return False
+
+
+
+
 password = (stripOutZeros(convert.process_audio("Test_Files\Password1_hello.wav")))
 attempt1 = (stripOutZeros(convert.process_audio("C:\Users\Brett Graham\PycharmProjects\Comp_221\Test_Files\Attempt1_hello_hell.wav")))
 attempt2 = (stripOutZeros(convert.process_audio("C:\Users\Brett Graham\PycharmProjects\Comp_221\Test_Files\Attempt2_hello_howdy.wav")))
@@ -66,6 +77,7 @@ print(len(attempt2))
 print(len(attempt3))
 print(len(attempt4))
 
+print(lcsMatrix(password,password))
 print(lcsMatrix(password,attempt1))
 print(lcsMatrix(password,attempt2))
 print(lcsMatrix(password,attempt3))
@@ -73,7 +85,6 @@ print(lcsMatrix(password,attempt4))
 
 # array1 = [['g'],['o'],['s'],['c'],['o'],['t'],['s']]
 # array2 = [['g'],['r'],['o'],['s'],['s']]
-#
 # print(lcsMatrix(array1,array2))
 
 
