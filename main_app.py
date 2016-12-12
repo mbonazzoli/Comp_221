@@ -21,14 +21,14 @@ def gui_main():
     rootWin.title("Audio Password 2.0")
     rootWin.config(bg = 'lavender')
 
-    title_label = Label(rootWin, font = 'Arial 30 bold', text = 'Welcome to the future.', justify = 'center')
-    # todo
+    title_label = Label(rootWin, font='Arial 30 bold', text='Welcome to the future', justify='center')
+    title_label.grid(row=0, column=0, columnspan=2)
 
-    button_frame = Frame(rootWin)
-    button_frame.grid(row=1, column=0)
-    create_user_button = Button(button_frame, text='Create User', font='Arial 24')
+    create_user_button = Button(rootWin, text='Create User', font='Arial 24', justify='left')
+    create_user_button.grid(row=1, column=0)
 
-
+    create_pass_button = Button(rootWin, text='Create User', font='Arial 24', justify='right')
+    create_pass_button.grid(row=1, column=1)
 
     rootWin.mainloop()
 
