@@ -1,22 +1,28 @@
-#import main_app
 import convert
-import record_data
+
+keypointSimilarity = .80
+passwordSimilarity = .50
+correctness = None
 
 
-keypointSimilarity = .90
+def compare_data(password, attempt):
+    global correctness
+    pass_array = stripOutZeros(password)
+    attempt_array = stripOutZeros(attempt)
+    pass_length = len(pass_array)
+    attempt_length = len(attempt_array)
+    longest = max(pass_length, attempt_length)
 
-def longestCommonSubstring(password, attempt):
-    # print(password[-1][0], attempt[-1][0])
+    num_matches = longest_common_substring(pass_array, attempt_array)
+    correctness = float(num_matches)/longest
 
-    if len(password)==0 or len(attempt) == 0:
-        return 0
-    if password[-1][0] == attempt[-1][0]:
-        return 1 + longestCommonSubstring(password[:-1],attempt[:-1])
+    if correctness >= passwordSimilarity:
+        return True
     else:
-        return max(longestCommonSubstring(password[:-1],attempt), longestCommonSubstring(password,attempt[:-1]))
+        return False
 
 
-def lcsMatrix(password, attempt):
+def longest_common_substring(password, attempt):
     matrix = []
     for g in range(len(password)+1):
         horlist = []
@@ -49,41 +55,43 @@ def stripOutZeros(array):
 
     return array[i:len(array)-g]
 
-def closeEnough(A,B):
+
+def closeEnough(A, B):
     C = min(A,B)
     lowerBound = C*keypointSimilarity
     upperBound = C*(2-keypointSimilarity)
-    if A>lowerBound and A<upperBound:
-        if B>lowerBound and B<upperBound:
+    if lowerBound < A < upperBound:
+        if lowerBound < B < upperBound:
             return True
     return False
 
 
+password1 = convert.process_audio("lowHigh.wav")
+attempt1 = convert.process_audio("lowHigh1.wav")
+attempt2 = convert.process_audio("high.wav")
+attempt3 = convert.process_audio("highLow.wav")
 
-
-password = (stripOutZeros(convert.process_audio("Test_Files\Password1_hello.wav")))
-attempt1 = (stripOutZeros(convert.process_audio("Test_Files\Attempt1_hello_hell.wav")))
-attempt2 = (stripOutZeros(convert.process_audio("Test_Files\Attempt2_hello_howdy.wav")))
-attempt3 = stripOutZeros(convert.process_audio("Test_Files\Attempt3_hello_hello.wav"))
-attempt4 = stripOutZeros(convert.process_audio("Test_Files\Attempt4_hello_hello.wav"))
-
-print(password)
+print(password1)
 print(attempt1)
 
-print(len(password))
+print(len(password1))
 print(len(attempt1))
 print(len(attempt2))
 print(len(attempt3))
-print(len(attempt4))
 
-print(lcsMatrix(password,password))
-print(lcsMatrix(password,attempt1))
-print(lcsMatrix(password,attempt2))
-print(lcsMatrix(password,attempt3))
-print(lcsMatrix(password,attempt4))
 
-# array1 = [['g'],['o'],['s'],['c'],['o'],['t'],['s']]
-# array2 = [['g'],['r'],['o'],['s'],['s']]
-# print(lcsMatrix(array1,array2))
+print(compare_data(password1, password1))
+print correctness
+print(compare_data(password1, attempt1))
+print correctness
+print(compare_data(password1, attempt2))
+print correctness
+print(compare_data(password1, attempt3))
+print correctness
+
+#
+# # array1 = [['g'],['o'],['s'],['c'],['o'],['t'],['s']]
+# # array2 = [['g'],['r'],['o'],['s'],['s']]
+# # print(lcsMatrix(array1,array2))
 
 
