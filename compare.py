@@ -4,7 +4,7 @@ keypointSimilarity = .80
 passwordSimilarity = .50
 correctness = None
 
-
+'Carries out the comparison between the stored password and the attempted password'
 def compare_data(password, attempt):
     global correctness
     pass_array = stripOutZeros(password)
@@ -21,7 +21,7 @@ def compare_data(password, attempt):
     else:
         return False
 
-
+'Runs a longest common substring algorithm implemented bottom up, to compare the two arrays of audio key points'
 def longest_common_substring(password, attempt):
     matrix = []
     for g in range(len(password)+1):
@@ -38,7 +38,7 @@ def longest_common_substring(password, attempt):
                 matrix[i + 1][j + 1] = max(matrix[i+1][j], matrix[i][j+1])
     return matrix[-1][-1]
 
-
+'Gets rid of zeros signifying silence at the beingnning and end of the audio data'
 def stripOutZeros(array):
     j = 0
     for i in range(len(array)):
@@ -55,7 +55,7 @@ def stripOutZeros(array):
 
     return array[i:len(array)-g]
 
-
+'determines whether two compared frequencies are within the allotted similarity value'
 def closeEnough(A, B):
     C = min(A,B)
     lowerBound = C*keypointSimilarity
@@ -66,32 +66,17 @@ def closeEnough(A, B):
     return False
 
 
-password1 = convert.process_audio("lowHigh.wav")
-attempt1 = convert.process_audio("lowHigh1.wav")
-attempt2 = convert.process_audio("high.wav")
-attempt3 = convert.process_audio("highLow.wav")
-
-print(password1)
-print(attempt1)
-
-print(len(password1))
-print(len(attempt1))
-print(len(attempt2))
-print(len(attempt3))
-
-
-print(compare_data(password1, password1))
-print correctness
-print(compare_data(password1, attempt1))
-print correctness
-print(compare_data(password1, attempt2))
-print correctness
-print(compare_data(password1, attempt3))
-print correctness
-
+# password1 = convert.process_audio("Test_Files\\lowHigh.wav")
+# attempt1 = convert.process_audio("Test_Files\\lowHigh1.wav")
+# attempt2 = convert.process_audio("Test_Files\\high.wav")
+# attempt3 = convert.process_audio("Test_Files\\highLow.wav")
 #
-# # array1 = [['g'],['o'],['s'],['c'],['o'],['t'],['s']]
-# # array2 = [['g'],['r'],['o'],['s'],['s']]
-# # print(lcsMatrix(array1,array2))
-
-
+#
+# print(compare_data(password1, password1))
+# print correctness
+# print(compare_data(password1, attempt1))
+# print correctness
+# print(compare_data(password1, attempt2))
+# print correctness
+# print(compare_data(password1, attempt3))
+# print correctness

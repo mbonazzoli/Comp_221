@@ -2,8 +2,8 @@ from Tkinter import *
 import record_data as rd
 import convert
 import compare
-# Global Variables
 
+# Global Variables
 # Main Window Variables
 BACKGROUND = 'lavender'
 rootWin = None
