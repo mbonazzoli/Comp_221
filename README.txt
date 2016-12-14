@@ -1,4 +1,4 @@
-Audio Password Program written by Matthew Bonazzoli and Brett Graham
+Audio Password Program created by Matthew Bonazzoli, Brett Graham, and Garret Eichhorn
 
 This program is written in Python 2.7 and relies on the built in python libraries and two imported libraries, pyaudio
 and NumPy. Use of the fft and subsequent conversion into a comparable data types were made possible with the help from Bret
