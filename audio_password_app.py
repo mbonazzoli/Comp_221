@@ -144,7 +144,7 @@ def locate_user():
             action_label['text'] = 'You have been granted access to the profile of ' + user_name +\
                                    '\n correctness: '+compare.correctness
         else:
-            action_label['text'] = 'The password had a correctness value of '+compare.correctness+'\n password denied.'
+            action_label['text'] = 'The password had a correctness value of '+str(compare.correctness)+'\n password denied.'
     else:
         action_label['text'] = 'Incorrect username, try again.'
 
